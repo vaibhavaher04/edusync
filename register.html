@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EduSync</title>
+    <!-- ICONSCOUT CDN -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+
+    <!-- GOOGLE FONTS (MONTSERRAT) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./css/register.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <div class="container nav__container">
+            <a href="index.html">
+                <h4>EduSync</h4>
+            </a>
+            <ul class="nav__menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button id="open-menu-btn"><i class="uil uil-bars"></i></button>
+            <button id="close-menu-btn"><i class="uil uil-multiply"></i></button>
+
+        </div>
+    </nav>
+
+    <!-- ========================== END OF NAVBAR ======================== -->
+
+    <div class="register-container">
+        <form id="registerForm" class="register-form" action="register.php" method="POST">
+            <h2>Register</h2>
+            <input type="text" id="name" name="name" placeholder="Full Name" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <span id="emailError" class="error"></span>
+            <input type="text" id="mobile" name="mobile" placeholder="Mobile Number" required pattern="[0-9]{10}">
+            <select id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+            <span id="passwordError" class="error"></span>
+            <button type="submit">Register</button>
+            <p class="login-link">Already registered? <a href="login.php">Login</a></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            let email = document.getElementById('email').value;
+            let emailError = document.getElementById('emailError');
+            let password = document.getElementById('password').value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
+            let passwordError = document.getElementById('passwordError');
+
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                emailError.textContent = "Invalid email format";
+                event.preventDefault(); // Prevent form submission if email is invalid
+                return;
+            } else {
+                emailError.textContent = "";
+            }
+
+            if (password !== confirmPassword) {
+                passwordError.textContent = "Passwords do not match";
+                event.preventDefault(); // Prevent form submission if passwords don't match
+                return;
+            } else {
+                passwordError.textContent = "";
+            }
+
+            // If validation passes, the form will submit to register.php
+        });
+    </script>
+
+    <script src="./main.js"></script>
+</body>
+
+</html>

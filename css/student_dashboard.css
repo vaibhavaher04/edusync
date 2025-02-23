@@ -1,0 +1,25 @@
+/* Custom Styles */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #343a40 !important;
+}
+
+.card {
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.modal-content {
+    border-radius: 10px;
+}
+
+.modal-body img {
+    border: 3px solid #6c63ff;
+}

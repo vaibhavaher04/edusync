@@ -1,0 +1,101 @@
+body {
+    background-color: var(--color-bg);
+    color: var(--color-white);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin-top: 5rem;
+}
+
+.register-form {
+    background: var(--color-bg1);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.register-form h2 {
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+}
+
+.register-form input, .register-form select, .register-form button {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.8rem;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+}
+
+.register-form input, .register-form select {
+    background: var(--color-bg2);
+    color: var(--color-white);
+}
+
+.register-form button {
+    background: var(--color-success);
+    color: var(--color-white);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.register-form button:hover {
+    background: var(--color-primary);
+}
+
+.error {
+    color: var(--color-danger);
+    font-size: 0.875rem;
+    margin-top: -0.5rem;
+    display: block;
+}
+
+.login-link {
+    color: var(--color-light);
+    font-size: 0.9rem;
+}
+
+.login-link a {
+    color: var(--color-warning);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* =================== MEDIA QUERIES =================== */
+
+@media (max-width: 1024px) {
+    .register-container {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    .register-form {
+        width: 90%;
+        padding: 1.5rem;
+    }
+    .register-form input, .register-form select, .register-form button {
+        font-size: 0.9rem;
+        padding: 0.7rem;
+    }
+}
+@media (max-width: 600px) {
+    .register-form {
+        width: 100%;
+        padding: 1rem;
+    }
+    .register-form h2 {
+        font-size: 1.5rem;
+    }
+}
