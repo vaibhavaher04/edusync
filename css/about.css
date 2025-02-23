@@ -1,0 +1,161 @@
+/* ================ About EduSync ================ */
+
+.about__achivements {
+    margin-top: 3rem;
+}
+
+.about__achivements-container {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 5rem;
+}
+
+.about__achivements-right > p {
+    margin: 1.6rem 0 2.5rem;
+}
+
+/* ================ About Developers ================ */
+
+/* Team Section */
+.team {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: var(--color-bg);
+}
+
+.team h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--color-white);
+}
+
+.team__description {
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+    font-size: 1.1rem;
+    color: var(--color-light);
+    text-align: center;
+    line-height: 1.6;
+}
+
+/* Team Container */
+.team__container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: var(--container-width-lg);
+    margin: auto;
+}
+
+/* Team Member Layout (Like Instagram Profile) */
+.team__member {
+    background: var(--color-bg1);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+}
+
+.team__member:hover {
+    background: var(--color-bg2);
+}
+
+/* Profile Image & Info (Instagram-Style) */
+.team__member-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Profile Image */
+.team__member-image img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--color-primary);
+}
+
+/* Member Info and Socials (Aligned on Right) */
+.team__member-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.team__member-info h4 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 5px;
+}
+
+.team__member-info p {
+    font-size: 1rem;
+    color: var(--color-light);
+}
+
+/* Social Links */
+.team__member-socials {
+    margin-top: 5px;
+}
+
+.team__member-socials a {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1.4rem;
+    color: var(--color-white);
+    transition: var(--transition);
+}
+
+.team__member-socials a:hover {
+    color: var(--color-primary);
+}
+
+/* Member Description (Instagram Bio Style) */
+.team__member-description {
+    margin-top: 15px;
+    font-size: 1rem;
+    color: var(--color-light);
+    text-align: left;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .about__achivements {
+        margin-top: 2rem;
+    }
+
+    .about__achivements-container {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+
+    .about__achivements-left {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .team__container {
+        max-width: var(--container-width-md);
+    }
+
+    .team__member-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .team__member-details {
+        align-items: center;
+    }
+
+    .team__member-description {
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .team__container {
+        max-width: var(--container-width-sm);
+    }
+}

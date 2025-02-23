@@ -1,0 +1,158 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-white);
+}
+
+.container {
+    width: var(--container-width-lg);
+    margin: 0 auto;
+}
+
+h2 {
+    text-align: center;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+.review {
+    background-color: var(--color-bg1);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    transition: var(--transition);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.review:hover {
+    background-color: var(--color-bg2);
+}
+
+.college__info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.college__logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--color-light);
+    object-fit: cover;
+}
+
+.course {
+    color: var(--color-warning);
+    font-weight: bold;
+}
+
+.college__desc {
+    font-size: 14px;
+    color: var(--color-light);
+}
+
+.reviews {
+    margin-top: 10px;
+    list-style: none;
+    padding: 0;
+}
+
+.reviews li {
+    background-color: var(--color-bg2);
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* For tablets and smaller screens */
+@media (max-width: 1024px) {
+    .container {
+        width: var(--container-width-md);
+    }
+
+    h2 {
+        margin-top: 4.5rem;
+    }
+
+    .college__info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .college__logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .review {
+        padding: 15px;
+    }
+
+    .reviews li {
+        font-size: 13px;
+    }
+}
+
+/* For mobile screens */
+@media (max-width: 768px) {
+    .container {
+        width: var(--container-width-sm);
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .review {
+        padding: 15px;
+    }
+
+    .college__info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .college__logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .course {
+        font-size: 14px;
+    }
+
+    .college__desc {
+        font-size: 13px;
+    }
+
+    .reviews li {
+        font-size: 12px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .college__logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .reviews li {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
