@@ -68,19 +68,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($insert_stmt->execute()) {
                 $success = "Marks added successfully!";
+                
+                // After inserting marks, send a notification
+                $notification_sql = "INSERT INTO notifications (student_id, message) VALUES (:student_id, :message)";
+                $notification_stmt = $db->prepare($notification_sql);
+                $notification_stmt->bindParam(':student_id', $user_id, PDO::PARAM_INT);
+                
+                // Get subject name for the notification
+                $subject_name = '';
+                foreach ($subjects as $sub) {
+                    if ($sub['subject_code'] == $subject_code) {
+                        $subject_name = $sub['subject_name'];
+                        break;
+                    }
+                }
+                
+                $message = "Your marks for {$subject_name} (Semester {$semester}) have been updated to {$marks_obtained}.";
+                $notification_stmt->bindParam(':message', $message, PDO::PARAM_STR);
+                $notification_stmt->execute();
             } else {
                 $error = "Failed to add marks. Please try again.";
             }
-
-            // After inserting marks, send a notification
-            $notification_sql = "INSERT INTO notifications (student_id, message) VALUES (:student_id, :message)";
-            $notification_stmt = $db->prepare($notification_sql);
-            $notification_stmt->bindParam(':student_id', $user_id, PDO::PARAM_INT);
-            $notification_stmt->bindParam(':message', $message, PDO::PARAM_STR);
-
-            $message = "Your marks for subject code {$subject_code} have been updated.";
-            $notification_stmt->execute();
-
         }
     } elseif (isset($_POST['edit_marks'])) {
         $mark_id = $_POST['mark_id'];
@@ -101,6 +109,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $error = "Failed to update marks. Please try again.";
             }
+        }
+    } elseif (isset($_POST['send_notification'])) {
+        $message = $_POST['message'];
+        $target = $_POST['notification_target'];
+        
+        try {
+            if ($target == 'all_students') {
+                // Send to all students in teacher's college
+                $query = "INSERT INTO notifications (student_id, message) 
+                          SELECT u.id, ? 
+                          FROM users u
+                          JOIN admission_form af ON u.id = af.user_id
+                          WHERE af.college_id = ?";
+                $stmt = $db->prepare($query);
+                $stmt->execute([$message, $college_id]);
+            } 
+            elseif ($target == 'selected_semester') {
+                // Send to students in selected semester of teacher's college
+                $query = "INSERT INTO notifications (student_id, message) 
+                          SELECT u.id, ? 
+                          FROM users u
+                          JOIN admission_form af ON u.id = af.user_id
+                          JOIN exam_form ef ON u.id = ef.user_id
+                          WHERE af.college_id = ? AND ef.semester = ?";
+                $stmt = $db->prepare($query);
+                $stmt->execute([$message, $college_id, $semester]);
+            }
+            elseif ($target == 'selected_student' && isset($_POST['student_id'])) {
+                // Send to specific student
+                $student_id = $_POST['student_id'];
+                $query = "INSERT INTO notifications (student_id, message) VALUES (?, ?)";
+                $stmt = $db->prepare($query);
+                $stmt->execute([$student_id, $message]);
+            }
+            
+            $notification_success = "Notification sent successfully!";
+        } catch (PDOException $e) {
+            $notification_error = "Error sending notification: " . $e->getMessage();
         }
     }
 }
@@ -157,6 +203,12 @@ foreach ($students as $student) {
         .success {
             color: green;
         }
+        .notification-form {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +221,70 @@ foreach ($students as $student) {
 
         <h1 class="text-center mb-4">Teacher Dashboard</h1>
         <h3 class="text-center mb-4"><?php echo htmlspecialchars($college_name); ?></h3>
+
+        <!-- Display Success/Error Messages -->
+        <?php if (isset($success)): ?>
+            <div class="alert alert-success text-center"><?php echo $success; ?></div>
+        <?php elseif (isset($error)): ?>
+            <div class="alert alert-danger text-center"><?php echo $error; ?></div>
+        <?php endif; ?>
+
+        <?php if (isset($notification_success)): ?>
+            <div class="alert alert-success text-center"><?php echo $notification_success; ?></div>
+        <?php elseif (isset($notification_error)): ?>
+            <div class="alert alert-danger text-center"><?php echo $notification_error; ?></div>
+        <?php endif; ?>
+
+        <!-- Notification System -->
+        <div class="card">
+            <div class="card-header">
+                Send Notifications
+            </div>
+            <div class="card-body">
+                <form method="POST" action="teacher_dashboard.php?semester=<?php echo $semester; ?>">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Notification Message</label>
+                        <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Send To:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="notification_target" id="allStudents" value="all_students" checked>
+                            <label class="form-check-label" for="allStudents">
+                                All Students in My College
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="notification_target" id="selectedSemester" value="selected_semester">
+                            <label class="form-check-label" for="selectedSemester">
+                                Current Semester Students (Semester <?php echo $semester; ?>)
+                            </label>
+                        </div>
+                        
+                        <?php if (!empty($students)): ?>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="notification_target" id="selectedStudent" value="selected_student">
+                                <label class="form-check-label" for="selectedStudent">
+                                    Specific Student
+                                </label>
+                                <select class="form-select mt-2" name="student_id" id="studentSelect" disabled>
+                                    <option value="">-- Select Student --</option>
+                                    <?php foreach ($students as $student): ?>
+                                        <option value="<?php echo $student['user_id']; ?>">
+                                            <?php echo htmlspecialchars($student['name']); ?> (ID: <?php echo $student['user_id']; ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <button type="submit" name="send_notification" class="btn btn-primary">Send Notification</button>
+                </form>
+            </div>
+        </div>
 
         <!-- Semester Selection -->
         <div class="card">
@@ -320,16 +436,17 @@ foreach ($students as $student) {
                 </div>
             </div>
         <?php endif; ?>
-
-        <!-- Display Success/Error Messages -->
-        <?php if (isset($success)): ?>
-            <div class="alert alert-success text-center"><?php echo $success; ?></div>
-        <?php elseif (isset($error)): ?>
-            <div class="alert alert-danger text-center"><?php echo $error; ?></div>
-        <?php endif; ?>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enable/disable student select based on radio selection
+        document.querySelectorAll('input[name="notification_target"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('studentSelect').disabled = this.value !== 'selected_student';
+            });
+        });
+    </script>
 </body>
 </html>
