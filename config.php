@@ -2,10 +2,10 @@
 session_start();
 
 // Database configuration
-define('DBNAME', 'edusync'); // if0_38283656_edusync
-define('DBUSER', 'root'); // if0_38283656
-define('DBPASS', ''); // 2vuGVwdAk8j8Tp
-define('DBHOST', 'localhost'); // sql112.infinityfree.com
+define('DBNAME', 'edusync');
+define('DBUSER', 'root');
+define('DBPASS', '');
+define('DBHOST', 'localhost');
 
 try {
     // Establish a database connection using PDO
